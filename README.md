@@ -98,11 +98,11 @@ const BookType = new GraphQLObjectType({
 });
 ```
 
-This object parameter that we will pass to the function `GraphQLObjectType` will define what this BookType is all about. Then we include key-value pairs( or properties) in this object like `name`, `fields`. This `fields` property is going to be a function. The reason that `fields` here is a function because when we have multiple types and they have references to each other, then one type will know what other type is. Now, this `fields` function will return an object and we define all our fields liek `id`, `name`, `genre` (and their type which is only understood by graphql) in this object. So, we again destructure `graphql` to further obtain those special types, like:
+This object parameter that we will pass to the function `GraphQLObjectType` will define what this BookType is all about. Then we include key-value pairs( or properties) in this object like `name`, `fields`. This `fields` property is going to be a function. The reason that `fields` here is a function because when we have multiple types and they have references to each other, then one type will know what other type is. Now, this `fields` function will return an object and we define all our fields like `id`, `name`, `genre` (and their type which is only understood by graphql) in this object. So, we again destructure `graphql` to further obtain those special types, like:
 
 ```js
 import graphql from "graphql";
-const { GraphQLString, GraphQLSchema } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLSchema } = graphql;
 ```
 
 Now, we pass this to our `fields` property in the `BookType` as objects
@@ -211,4 +211,54 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}..`);
 });
+```
+
+### Dummy data
+
+Let's create some data. Later on we will be using a MongoDB database for this. In `schema.js` we create a `bookData` array and in the `resolve` function of `RootQuery` we are using this `bookData`:
+
+```js
+const booksData = [
+  { name: " Gone with the wind", id: "1", genre: "fiction", authorid: "1" },
+  { name: " Interstellar", id: "2", genre: "Sci-fi", authorid: "2" },
+  { name: " 3 idiots", id: "3", genre: "fiction", authorid: "3" },
+];
+
+const RootQuery = new GraphQLObjectType({
+  name: "RootQueryType",
+  fields: {
+    book: {
+      type: BookType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        // code to get data from DB or any other source
+        return booksData.find((book) => book.id === args.id);
+      },
+    },
+  },
+});
+```
+
+Now, fire up the server and type `http://localhost:4000/graphql` and it will open a graphiQL tool and on Left side write:
+
+```js
+{
+  book(id: 1) {
+    name
+    genre
+  }
+}
+```
+
+And you will see this query's output on Right side, which is like this:
+
+```js
+{
+  "data": {
+    "book": {
+      "name": " Gone with the wind",
+      "genre": "fiction"
+    }
+  }
+}
 ```
