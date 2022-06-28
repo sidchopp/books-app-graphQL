@@ -33,11 +33,17 @@ Client(Browser) <----> Server(Node.js) <---> DataBase(MongoDB)
 1. Now install Express : `npm install express --save`
 1. Inside the server folder create a file `app.js` and write the following code in it:
 
-`import express from 'express';`
-`const app = express();`
-`app.get('/', (req, res) => {res.send("<h1>Hello World!</h1>")});`
-`const port = 4000;`
-`app.listen(port, () => {console.log(`Server is listening on port ${port}..`)});`
+```js
+import express from "express";
+const app = express();
+const port = 4000;
+app.get("/", (req, res) => {
+  res.send("<h1>Hello World!</h1>");
+});
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}..`);
+});
+```
 
 1. Install a package called nodemon which automatically restart the node application when file changes in the directory are detected. : `npm install --save-dev nodemon`
 1. In package.json file, in `scripts` add:
