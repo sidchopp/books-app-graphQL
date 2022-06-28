@@ -52,9 +52,20 @@ app.listen(port, () => {
 
 ## For GraphQL
 
-1. From `server` folder run: `npm install graphql express-graphql` The first package `graphql` is the main graphQL package which is a JavaScript implementation of GraphQL. The second package `express-graphql` will help our express server to understand/talk with graphQL
+1. From `server` folder run:
+
+```js
+ npm install graphql express-graphql
+```
+
+The first package `graphql` is the main graphQL package which is a JavaScript implementation of GraphQL. The second package `express-graphql` will help our express server to understand/talk with graphQL
+
 1. Inside `app.js`, write:
-   `import { graphqlHTTP } from 'express-graphql';`
+   ```js
+   import { graphqlHTTP } from "express-graphql";
+   ```
 1. For middleware, also write:
-   `app.use('/graphql', graphqlHTTP({}));`
+   ```js
+   app.use("/graphql", graphqlHTTP({}));
+   ```
    In the above step, we have created a single endpoint `/graphql`, to which we will send all our graphQL queries. So, anyone sends a request to this endpoint, `graphqlHTTP` function will be fired. This function takes an object which we will talk about in next step
