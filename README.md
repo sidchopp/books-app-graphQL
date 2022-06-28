@@ -28,15 +28,12 @@ Client(Browser) <----> Server(Node.js) <---> DataBase(MongoDB)
 1. To use import (and not require in Node), write : `"type": "module"` in package.json. Make sure to write files with `.js` extensions while importing now.
 1. Start VS Code for this project: `code .`
 1. Now install Express : `npm install express --save`
-1. Inside the server folder create a file `app.js` and write the following code in it
-   `import express from 'express';`
+1. Inside the server folder create a file `app.js` and write the following code in it:
+
+`import express from 'express';`
 
 `const app = express();`
 
-`app.get('/', (req, res) => {`
-`res.send("<h1>Hello World!</h1>")`
-`});`
+`app.get('/', (req, res) => {res.send("<h1>Hello World!</h1>")});`
 
-`app.listen(port, () => {`
-`console.log(`Server is listening on port ${port}..`)`
-`});`
+`app.listen(port, () => {console.log(`Server is listening on port ${port}..`)});`
