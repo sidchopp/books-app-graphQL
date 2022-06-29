@@ -20,18 +20,19 @@ Client(Browser) <----> Server(Node.js) <---> DataBase(MongoDB)
 
 ## To Start the project
 
-1. Start a command shell (CMD, PowerShell, Terminal, etc.)
-1. Make a directory/folder for your work: `mkdir books-app-graphQL`
-1. `cd books-app-graphQL`
-1. Make a subfolder by the name of `server`
-1. `cd server`
-1. To use import (and not require in Node), write : `"type": "module"` in package.json. Make sure to write files with `.js` extensions while importing now.
-1. Start VS Code for this project: `code .`
+- Start a command shell (CMD, PowerShell, Terminal, etc.)
+- Make a directory/folder for your work: `mkdir books-app-graphQL`
+- `cd books-app-graphQL`
+- Make a subfolder by the name of `server`
+- `cd server`
+- To use import (and not require in Node), write : `"type": "module"` in package.json. Make sure to write files with `.js` extensions while importing now.
+
+- Start VS Code for this project: `code .`
 
 ## For Express
 
-1. Now install Express : `npm install express --save`
-1. Inside the server folder create a file `app.js` and write the following code in it:
+- Now install Express : `npm install express --save`
+- Inside the server folder create a file `app.js` and write the following code in it:
 
 ```js
 import express from "express";
@@ -45,14 +46,14 @@ app.listen(port, () => {
 });
 ```
 
-1. Install a package called nodemon which automatically restart the node application when file changes in the directory are detected. : `npm install --save-dev nodemon`
-1. In package.json file, in `scripts` add:
-   `{"start": "nodemon app.js"},`
-1. To start the Node server, write : `node start`
+- Install a package called nodemon which automatically restart the node application when file changes in the directory are detected. : `npm install --save-dev nodemon`
+- In package.json file, in `scripts` add:
+  `{"start": "nodemon app.js"},`
+- To start the Node server, write : `node start`
 
 ## For GraphQL
 
-1. From `server` folder run:
+- From `server` folder run:
 
 ```js
  npm install graphql express-graphql
@@ -60,23 +61,23 @@ app.listen(port, () => {
 
 The first package `graphql` is the main graphQL package which is a JavaScript implementation of GraphQL. The second package `express-graphql` will help our express server to understand/talk with graphQL
 
-1. Inside `app.js`, write:
-   ```js
-   import { graphqlHTTP } from "express-graphql";
-   ```
-1. For middleware, also write:
+- Inside `app.js`, write:
+  ```js
+  import { graphqlHTTP } from "express-graphql";
+  ```
+- For middleware, also write:
 
-   ```js
-   app.use("/graphql", graphqlHTTP({}));
-   ```
+  ```js
+  app.use("/graphql", graphqlHTTP({}));
+  ```
 
-   In the above step, we have created a single endpoint `/graphql`, to which we will send all our graphQL queries. So, anyone sends a request to this endpoint, `graphqlHTTP` function will be fired. This function takes an object which we will talk about in next step. If we run our server now we get an error:
+- In the above step, we have created a single endpoint `/graphql`, to which we will send all our graphQL queries. So, anyone sends a request to this endpoint, `graphqlHTTP` function will be fired. This function takes an object which we will talk about in next step. If we run our server now we get an error:
 
-   ```js
-   {"errors":[{"message":"GraphQL middleware options must contain a schema."}]}
-   ```
+  ```js
+  {"errors":[{"message":"GraphQL middleware options must contain a schema."}]}
+  ```
 
-   To avoid this error, we need to pass in a `schema` in the `app.use` middleware. That `schema` will tell our express graphql server about our data types and how they are related, their properties, etc. The basic purpose of `schema` here is to jump to different points in our graph and to retrieve or mutate our data. So, we first create a `schema` and then pass it into the `app.use` middleware so that graphql knows exactly how to deal with our data queries.
+- To avoid this error, we need to pass in a `schema` in the `app.use` middleware. That `schema` will tell our express graphql server about our data types and how they are related, their properties, etc. The basic purpose of `schema` here is to jump to different points in our graph and to retrieve or mutate our data. So, we first create a `schema` and then pass it into the `app.use` middleware so that graphql knows exactly how to deal with our data queries.
 
 ### Schema
 
@@ -141,10 +142,10 @@ export default new GraphQLSchema({
 });
 ```
 
-Things to remember about root queries:
+- Things to remember about root queries:
 
-1.  firstly we don't have to wrap `fields` of RootQuery in a function(unlike we did in `BookType`).
-1.  secondly the name `book` in the `fields` propery matters as we will use the same name `book` when we make queries from front end(or graphiql).
+1.  We don't have to wrap `fields` of RootQuery in a function(unlike we did in `BookType`).
+1.  The name `book` in the `fields` propery matters as we will use the same name `book` when we make queries from front end(or graphiql).
 1.  The value of `type` property in `fields` is `BookType` which is the first Object Type we have defined for graphQL.
 1.  There is another property called `args` or arguments. For ex. if a User is querying for a book then we expect the user to pass an argument or arguments (say id of that particular book, etc.) so that graphql knows exactly which book to show to the User.
 1.  The `resolve` function takes two parameters `parents` and `args`. Inside the code block of this resolve function we write the code for whatever data( from database or any other source) the User is looking for in a particular query. The first parameter `parent` comes into play when we try to look into relationship between data or type objects( like between BookType and AuthorType, etc.). The second parameter `args` represents the `args` property's value defined in `book`( which is the value of `id` in our case).
@@ -185,7 +186,7 @@ export default new GraphQLSchema({
 });
 ```
 
-1. And our `app.js` will look like this:
+- And our `app.js` will look like this:
 
 ```js
 import express from "express";
