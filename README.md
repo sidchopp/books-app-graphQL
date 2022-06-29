@@ -80,16 +80,16 @@ The first package `graphql` is the main graphQL package which is a JavaScript im
 
 ### Schema
 
-1. Create a subfolder named `schema` in the `server` folder and inside it create a new file `schema.js`. Inside this file write:
+- Create a subfolder named `schema` in the `server` folder and inside it create a new file `schema.js`. Inside this file write:
 
 ```js
 import graphql from "graphql";
 const { GraphQLObjectType } = graphql;
 ```
 
-Here we have imported graphql in our schema.js file and then using destructuring we defined a function `GraphQLObjectType` which takes an object as a parameter.
+- Here we have imported graphql in our schema.js file and then using destructuring we defined a function `GraphQLObjectType` which takes an object as a parameter.
 
-1. Let's define an Object type here, say `BookType`.
+- Let's define an Object type here, say `BookType`.
 
 ```js
 const BookType = new GraphQLObjectType({
@@ -98,7 +98,7 @@ const BookType = new GraphQLObjectType({
 });
 ```
 
-This object parameter that we will pass to the function `GraphQLObjectType` will define what this BookType is all about. Then we include key-value pairs( or properties) in this object like `name`, `fields`. This `fields` property is going to be a function. The reason that `fields` here is a function because when we have multiple types and they have references to each other, then one type will know what other type is. Now, this `fields` function will return an object and we define all our fields like `id`, `name`, `genre` (and their type which is only understood by graphql) in this object. So, we again destructure `graphql` to further obtain those special types, like:
+- This object parameter that we will pass to the function `GraphQLObjectType` will define what this BookType is all about. Then we include key-value pairs( or properties) in this object like `name`, `fields`. This `fields` property is going to be a function. The reason that `fields` here is a function because when we have multiple types and they have references to each other, then one type will know what other type is. Now, this `fields` function will return an object and we define all our fields like `id`, `name`, `genre` (and their type which is only understood by graphql) in this object. So, we again destructure `graphql` to further obtain those special types, like:
 
 ```js
 import graphql from "graphql";
@@ -118,7 +118,7 @@ const BookType = new GraphQLObjectType({
 });
 ```
 
-So, above we have defined our first type called `BookType` and then we gave it a `name` and defined its `fields` and also the `type` of those fields. Now, it's time to pass this `schema` into the `app.use` middleware, so that we can make queries to our data( which we have not defined yet). Such queries are called root queries. The `schema.js` file has 3 responsibilities- to define types( for ex BookType), to define relationships between types( for ex between BookType and AuthorType, which we will create later) and to define root queries( which means the entry points into a graph). Let's create a root query in this file:
+- So, above we have defined our first type called `BookType` and then we gave it a `name` and defined its `fields` and also the `type` of those fields. Now, it's time to pass this `schema` into the `app.use` middleware, so that we can make queries to our data( which we have not defined yet). Such queries are called root queries. The `schema.js` file has 3 responsibilities- to define types( for ex BookType), to define relationships between types( for ex between BookType and AuthorType, which we will create later) and to define root queries( which means the entry points into a graph). Let's create a root query in this file:
 
 ```js
 const RootQuery = new GraphQLObjectType({
@@ -148,7 +148,8 @@ Things to remember about root queries:
 1.  The value of `type` property in `fields` is `BookType` which is the first Object Type we have defined for graphQL.
 1.  There is another property called `args` or arguments. For ex. if a User is querying for a book then we expect the user to pass an argument or arguments (say id of that particular book, etc.) so that graphql knows exactly which book to show to the User.
 1.  The `resolve` function takes two parameters `parents` and `args`. Inside the code block of this resolve function we write the code for whatever data( from database or any other source) the User is looking for in a particular query. The first parameter `parent` comes into play when we try to look into relationship between data or type objects( like between BookType and AuthorType, etc.). The second parameter `args` represents the `args` property's value defined in `book`( which is the value of `id` in our case).
-1.  So, now our `schema.js` file looks like this:
+
+- So, now our `schema.js` file looks like this:
 
 ```js
 import graphql from "graphql";
@@ -239,7 +240,7 @@ const RootQuery = new GraphQLObjectType({
 });
 ```
 
-Now, fire up the server and type `http://localhost:4000/graphql` and it will open a graphiQL tool and on Left side write:
+- Now, start the server and type `http://localhost:4000/graphql` and it will open a graphiQL tool and on Left side write:
 
 ```js
 {
@@ -250,7 +251,7 @@ Now, fire up the server and type `http://localhost:4000/graphql` and it will ope
 }
 ```
 
-And you will see this query's output on Right side, which is like this:
+- Now, press the start/play button and you will see this query's output on Right side, which is like this:
 
 ```js
 {
@@ -263,7 +264,7 @@ And you will see this query's output on Right side, which is like this:
 }
 ```
 
-1. Let's define another Object type here, say `AuthorType`, just like we have created `BookType` earlier.Then we create an array which has a list of Authors called `authorsData` just like we have created `booksData`. And since we are using integer values in the `age` property of `authorsData`, so we will destructure `graphql` again to get `GraphQLInt` :
+- Let's define another Object type here, say `AuthorType`, just like we have created `BookType` earlier.Then we create an array which has a list of Authors called `authorsData` just like we have created `booksData`. And since we are using integer values in the `age` property of `authorsData`, so we will destructure `graphql` again to get `GraphQLInt` :
 
 ```js
 const { GraphQLInt } = graphql;
@@ -286,7 +287,7 @@ const AuthorType = new GraphQLObjectType({
 });
 ```
 
-1. Now we will also create root query for this `AuthorType` to query about authors, just like we have created root query for querying about books. So, the root query for both books and authors will look like this:
+- Now we will also create root query for this `AuthorType` to query about authors, just like we have created root query for querying about books. So, the root query for both books and authors will look like this:
 
 ```js
 const RootQuery = new GraphQLObjectType({
@@ -312,7 +313,7 @@ const RootQuery = new GraphQLObjectType({
 });
 ```
 
-Start your server and in graphiql console, on Left write and press the start/play button:
+- Now, start the server and type `http://localhost:4000/graphql` and it will open a graphiQL tool and on Left side write:
 
 ```js{
   author(id: 3){
@@ -322,7 +323,7 @@ Start your server and in graphiql console, on Left write and press the start/pla
 }
 ```
 
-And you will see this query's output on Right side, which is like this:
+- Now, press the start/play button and you will see this query's output on Right side, which is like this:
 
 ```js
 {
