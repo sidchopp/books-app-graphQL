@@ -89,7 +89,7 @@ const { GraphQLObjectType } = graphql;
 
 Here we have imported graphql in our schema.js file and then using destructuring we defined a function `GraphQLObjectType` which takes an object as a parameter.
 
-1. Let's define an Object type here, say BookType.
+1. Let's define an Object type here, say `BookType`.
 
 ```js
 const BookType = new GraphQLObjectType({
@@ -152,13 +152,13 @@ Things to remember about root queries:
 
 ```js
 import graphql from "graphql";
-const { GraphQLString, GraphQLObjectType, GraphQLSchema } = graphql;
+const { GraphQLString, GraphQLObjectType, GraphQLSchema, GraphQLID } = graphql;
 
 // Our first type
 const BookType = new GraphQLObjectType({
   name: "Book",
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString },
   }),
@@ -258,6 +258,78 @@ And you will see this query's output on Right side, which is like this:
     "book": {
       "name": " Gone with the wind",
       "genre": "fiction"
+    }
+  }
+}
+```
+
+1. Let's define another Object type here, say `AuthorType`, just like we have created `BookType` earlier.Then we create an array which has a list of Authors called `authorsData` just like we have created `booksData`. And since we are using integer values in the `age` property of `authorsData`, so we will destructure `graphql` again to get `GraphQLInt` :
+
+```js
+const { GraphQLInt } = graphql;
+
+// Some dummy data about authors
+const authorsData = [
+  { name: " Patrick Rothfuss", age: 44, id: "1" },
+  { name: " Brandon Sanderson", age: 42, id: "2" },
+  { name: " Terry Patchett", age: 66, id: "3" },
+];
+
+// The Author type //
+const AuthorType = new GraphQLObjectType({
+  name: "Author",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    age: { type: GraphQLInt },
+  }),
+});
+```
+
+1. Now we will also create root query for this `AuthorType` to query about authors, just like we have created root query for querying about books. So, the root query for both books and authors will look like this:
+
+```js
+const RootQuery = new GraphQLObjectType({
+  name: "RootQueryType",
+  fields: {
+    // root query for books
+    book: {
+      type: BookType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return booksData.find((book) => book.id === args.id);
+      },
+    },
+    // root query for authors
+    author: {
+      type: AuthorType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return authorsData.find((author) => author.id === args.id);
+      },
+    },
+  },
+});
+```
+
+Start your server and in graphiql console, on Left write and press the start/play button:
+
+```js{
+  author(id: 3){
+    name
+    age
+  }
+}
+```
+
+And you will see this query's output on Right side, which is like this:
+
+```js
+{
+  "data": {
+    "author": {
+      "name": " Terry Patchett",
+      "age": 66
     }
   }
 }
