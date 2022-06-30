@@ -456,7 +456,7 @@ const AuthorType = new GraphQLObjectType({
 });
 ```
 
-- Now run the server and write this code:
+- Now run the server, and in graphiql console write this code:
 
 ```js
 {
@@ -472,7 +472,7 @@ const AuthorType = new GraphQLObjectType({
 
 ```
 
-Press Start/play button of graphiql and you will see this outpit:
+Press Start/play button of graphiql console and you will see this output:
 
 ```js
 {
@@ -495,6 +495,271 @@ Press Start/play button of graphiql and you will see this outpit:
         }
       ]
     }
+  }
+}
+```
+
+- NOTE: The reason for using a function as the value of `fields` property for `AuthorType` or `BookType` is more meaningful now. Since we are referencing `Booktype` in `AuthorType` and vice versa, and it might be possible that `BookType` is defined after we have defined `AuthorType` in our `schema.js` file, so we will get an error if we had used an object and not a function as the value of `fields` property.
+
+- Till now we have two root querie: one for finding a particular book from `booksData` and one for finding a particular author from `authorsData`. Let's define two more root queries to show a list of all the books from `booksData` and a list of all authors from `authorsData`. So, in our `RootQuery` we define two more fields by the name of `books` and `authors`.
+
+```js
+const RootQuery = new GraphQLObjectType({
+  name: "RootQueryType",
+  fields: {
+    book: {
+      type: BookType,
+      args: { id: { type: GraphQLID } },
+      // Here resolve func. looks into the book data and returns what we want
+      resolve(parent, args) {
+        // code to get data from DB or any other source
+        return booksData.find((book) => book.id === args.id);
+      },
+    },
+    author: {
+      type: AuthorType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return authorsData.find((author) => author.id === args.id);
+      },
+    },
+    // Two new root queries
+    books: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        return booksData;
+      },
+    },
+    authors: {
+      type: new GraphQLList(AuthorType),
+      resolve(parent, args) {
+        return authorsData;
+      },
+    },
+  },
+});
+```
+
+- Start server and in graphical when we write:
+
+```js
+{
+  books {
+    name
+    genre
+  }
+}
+```
+
+We get output:
+
+```js
+{
+  "data": {
+    "books": [
+      {
+        "name": " Name of the wind",
+        "genre": "fiction"
+      },
+      {
+        "name": " The Final Empire",
+        "genre": "fantasy"
+      },
+      {
+        "name": " The Long Earth",
+        "genre": "sci-fi"
+      },
+      {
+        "name": " The Hero of Ages",
+        "genre": "fantasy"
+      },
+      {
+        "name": " The Color of Magic",
+        "genre": "fantasy"
+      },
+      {
+        "name": "The Light Fantastic",
+        "genre": "fantasy"
+      }
+    ]
+  }
+}
+```
+
+If we write:
+
+```js
+{
+  authors {
+    name
+    age
+  }
+}
+
+```
+
+We get output as:
+
+```js
+{
+  "data": {
+    "authors": [
+      {
+        "name": " Patrick Rothfuss",
+        "age": 44
+      },
+      {
+        "name": " Brandon Sanderson",
+        "age": 42
+      },
+      {
+        "name": " Terry Patchett",
+        "age": 66
+      }
+    ]
+  }
+}
+```
+
+- The best thing is that since we have type relation between books and authors so even we try something like this in graphiql:
+
+```js
+{
+  books {
+    name
+    genre
+    author {
+      name
+      age
+    }
+  }
+}
+```
+
+The output we get is:
+
+```js
+{
+  "data": {
+    "books": [
+      {
+        "name": " Name of the wind",
+        "genre": "fiction",
+        "author": {
+          "name": " Patrick Rothfuss",
+          "age": 44
+        }
+      },
+      {
+        "name": " The Final Empire",
+        "genre": "fantasy",
+        "author": {
+          "name": " Brandon Sanderson",
+          "age": 42
+        }
+      },
+      {
+        "name": " The Long Earth",
+        "genre": "sci-fi",
+        "author": {
+          "name": " Terry Patchett",
+          "age": 66
+        }
+      },
+      {
+        "name": " The Hero of Ages",
+        "genre": "fantasy",
+        "author": {
+          "name": " Brandon Sanderson",
+          "age": 42
+        }
+      },
+      {
+        "name": " The Color of Magic",
+        "genre": "fantasy",
+        "author": {
+          "name": " Terry Patchett",
+          "age": 66
+        }
+      },
+      {
+        "name": "The Light Fantastic",
+        "genre": "fantasy",
+        "author": {
+          "name": " Terry Patchett",
+          "age": 66
+        }
+      }
+    ]
+  }
+}
+
+```
+
+And if we write:
+
+```js
+{
+  authors {
+    name
+   age
+   books {
+      name
+      genre
+    }
+  }
+}
+```
+
+We get output as:
+
+```js
+{
+  "data": {
+    "authors": [
+      {
+        "name": " Patrick Rothfuss",
+        "age": 44,
+        "books": [
+          {
+            "name": " Name of the wind",
+            "genre": "fiction"
+          }
+        ]
+      },
+      {
+        "name": " Brandon Sanderson",
+        "age": 42,
+        "books": [
+          {
+            "name": " The Final Empire",
+            "genre": "fantasy"
+          },
+          {
+            "name": " The Hero of Ages",
+            "genre": "fantasy"
+          }
+        ]
+      },
+      {
+        "name": " Terry Patchett",
+        "age": 66,
+        "books": [
+          {
+            "name": " The Long Earth",
+            "genre": "sci-fi"
+          },
+          {
+            "name": " The Color of Magic",
+            "genre": "fantasy"
+          },
+          {
+            "name": "The Light Fantastic",
+            "genre": "fantasy"
+          }
+        ]
+      }
+    ]
   }
 }
 ```
