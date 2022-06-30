@@ -419,3 +419,82 @@ const BookType = new GraphQLObjectType({
   }
 }
 ```
+
+- Now,we want that when a User queries for a particular author, a list of all the books by that author will also be received by the User.So, now we create a `books` property, which is an object, inside the `AuthorType`. The value of this property will be a `new GraphQLList` which takes `BookType` as a paramter. Remember `BookType` will give the User a particular book only and not a list of all books.So, we need to destructure `graphql` again and get ` GraphQLList` from it.
+
+```js
+import { GraphQLList} = graphhql;
+
+// Let's add three  more books to our booksData
+const booksData = [
+  { name: " Name of the wind", id: "1", genre: "fiction", authorid: "1" },
+  { name: " The Final Empire", id: "2", genre: "fantasy", authorid: "2" },
+  { name: " The Long Earth", id: "3", genre: "sci-fi", authorid: "3" },
+  { name: " The Hero of Ages", id: "4", genre: "fantasy", authorid: "2" },
+  { name: " The Color of Magic", id: "5", genre: "fantasy", authorid: "3" },
+  { name: "The Light Fantastic", id: "6", genre: "fantasy", authorid: "3" },
+];
+
+// Updated Author type
+
+const AuthorType = new GraphQLObjectType({
+  name: "Author",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    age: { type: GraphQLInt },
+    books: {
+      // to get a list of books by an Author
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        console.log(parent);
+        // Now resovle fn will filter the books that belong to a particular author
+        return booksData.filter((books) => books.authorid === parent.id);
+      },
+    },
+  }),
+});
+```
+
+- Now run the server and write this code:
+
+```js
+{
+  author(id: 3) {
+    name
+    age
+    books {
+      name
+      genre
+    }
+  }
+}
+
+```
+
+Press Start/play button of graphiql and you will see this outpit:
+
+```js
+{
+  "data": {
+    "author": {
+      "name": " Terry Patchett",
+      "age": 66,
+      "books": [
+        {
+          "name": " The Long Earth",
+          "genre": "sci-fi"
+        },
+        {
+          "name": " The Color of Magic",
+          "genre": "fantasy"
+        },
+        {
+          "name": "The Light Fantastic",
+          "genre": "fantasy"
+        }
+      ]
+    }
+  }
+}
+```

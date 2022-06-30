@@ -6,6 +6,7 @@ const {
   GraphQLSchema,
   GraphQLID,
   GraphQLInt,
+  GraphQLList,
 } = graphql;
 
 //Dummy data till we create a mongoDB instance for a real DB...
@@ -39,10 +40,10 @@ const BookType = new GraphQLObjectType({
       // Here resolve func. looks into the author data and looks for the author of the book and returns what we want
       resolve(parent, args) {
         //Here the parent parameter has access to that book(and its properties)  which the User has asked for.
-        console.log(parent);
+        // console.log(parent);
         // return authorsData.find((parent) => parent.id === args.authorid);
         return authorsData.find((author) => {
-          console.log(author);
+          // console.log(author);
           return author.id === parent.authorid;
         });
       },
@@ -57,6 +58,15 @@ const AuthorType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
+    books: {
+      // to get a list of books
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        console.log(parent);
+        // Now resovle fn will filter the books that belong to a particular author
+        return booksData.filter((books) => books.authorid === parent.id);
+      },
+    },
   }),
 });
 
