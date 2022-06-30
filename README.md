@@ -501,7 +501,7 @@ Press Start/play button of graphiql console and you will see this output:
 
 - NOTE: The reason for using a function as the value of `fields` property for `AuthorType` or `BookType` is more meaningful now. Since we are referencing `Booktype` in `AuthorType` and vice versa, and it might be possible that `BookType` is defined after we have defined `AuthorType` in our `schema.js` file, so we will get an error if we had used an object and not a function as the value of `fields` property.
 
-- Till now we have two root querie: one for finding a particular book from `booksData` and one for finding a particular author from `authorsData`. Let's define two more root queries to show a list of all the books from `booksData` and a list of all authors from `authorsData`. So, in our `RootQuery` we define two more fields by the name of `books` and `authors`.
+- Till now we have two root queries: one for finding a particular book from `booksData` and one for finding a particular author from `authorsData`. Let's define two more root queries to show a list of all the books from `booksData` and a list of all authors from `authorsData`. So, in our `RootQuery` we define two more fields by the name of `books` and `authors`.
 
 ```js
 const RootQuery = new GraphQLObjectType({
@@ -540,7 +540,7 @@ const RootQuery = new GraphQLObjectType({
 });
 ```
 
-- Start server and in graphical when we write:
+- Start server and in graphiql console write:
 
 ```js
 {
@@ -551,7 +551,7 @@ const RootQuery = new GraphQLObjectType({
 }
 ```
 
-We get output:
+We get this output:
 
 ```js
 {
@@ -598,7 +598,7 @@ If we write:
 
 ```
 
-We get output as:
+We get this output:
 
 ```js
 {
@@ -621,13 +621,14 @@ We get output as:
 }
 ```
 
-- The best thing is that since we have type relation between books and authors so even we try something like this in graphiql:
+- NOTE: The best thing is that since we have type relation between books and authors so even we try something like this in graphiql:
 
 ```js
 {
   books {
     name
     genre
+    // We also want to know about the authors of all the books
     author {
       name
       age
@@ -703,6 +704,7 @@ And if we write:
   authors {
     name
    age
+   // We also want to know about all the books written by all the authors
    books {
       name
       genre
@@ -762,4 +764,30 @@ We get output as:
     ]
   }
 }
+```
+
+## MongoDB
+
+Let's fireup a MongoDB instance, where we will store our data about books and authors.
+
+- Install dotenv package in server `npm i dotenv`
+- Create a file `.env` in the server folder and inside that file store the connection string of the MongoDB instance( for security)
+- Go to `app.js` file and add this code:
+
+```js
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
+
+//db connection
+mongoose.connect(process.env.MONGO_URL);
+mongoose.connection.once("open", () => {
+  console.log("connected to MongoDB...");
+});
+```
+
+Fire up the server and you will see in the console:
+
+```js
+connected to MongoDB...
 ```
