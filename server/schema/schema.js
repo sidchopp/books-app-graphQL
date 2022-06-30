@@ -10,9 +10,9 @@ const {
 
 //Dummy data till we create a mongoDB instance for a real DB...
 const booksData = [
-  { name: " Gone with the wind", id: "1", genre: "fiction", authorid: "1" },
-  { name: " Interstellar", id: "2", genre: "Sci-fi", authorid: "2" },
-  { name: " 3 idiots", id: "3", genre: "fiction", authorid: "3" },
+  { name: " Name of the wind", id: "1", genre: "fiction", authorid: "1" },
+  { name: " The Final Empire", id: "2", genre: "fantasy", authorid: "2" },
+  { name: " The Long Earth", id: "3", genre: "sci-fi", authorid: "3" },
 ];
 
 const authorsData = [
@@ -35,9 +35,13 @@ const BookType = new GraphQLObjectType({
       type: AuthorType,
       // Here resolve func. looks into the author data and looks for the author of the book and returns what we want
       resolve(parent, args) {
-        //Here parent equals that book(from booksData ) whose author we want from resolve func.
+        //Here the parent parameter has access to that book(and its properties)  which the User has asked for.
         console.log(parent);
-        return authorsData.find((parent) => parent.authorid === args.id);
+        // return authorsData.find((parent) => parent.authorid === args.id);
+        return authorsData.find((author) => {
+          console.log(author);
+          return author.authorid === args.id;
+        });
       },
     },
   }),

@@ -79,7 +79,7 @@ The first package `graphql` is the main graphQL package which is a JavaScript im
 
 - To avoid this error, we need to pass in a `schema` in the `app.use` middleware. That `schema` will tell our express graphql server about our data types and how they are related, their properties, etc. The basic purpose of `schema` here is to jump to different points in our graph and to retrieve or mutate our data. So, we first create a `schema` and then pass it into the `app.use` middleware so that graphql knows exactly how to deal with our data queries.
 
-### Schema
+### Schema and Type
 
 - Create a subfolder named `schema` in the `server` folder and inside it create a new file `schema.js`. Inside this file write:
 
@@ -221,9 +221,9 @@ Let's create some data. Later on we will be using a MongoDB database for this. I
 
 ```js
 const booksData = [
-  { name: " Gone with the wind", id: "1", genre: "fiction", authorid: "1" },
-  { name: " Interstellar", id: "2", genre: "Sci-fi", authorid: "2" },
-  { name: " 3 idiots", id: "3", genre: "fiction", authorid: "3" },
+  { name: " Name of the wind", id: "1", genre: "fiction" },
+  { name: " The Final Empire", id: "2", genre: "fantasy" },
+  { name: " The Long Earth", id: "3", genre: "sci-fi" },
 ];
 
 const RootQuery = new GraphQLObjectType({
@@ -258,7 +258,7 @@ const RootQuery = new GraphQLObjectType({
 {
   "data": {
     "book": {
-      "name": " Gone with the wind",
+      "name": " Name of the wind",
       "genre": "fiction"
     }
   }
@@ -335,4 +335,80 @@ const RootQuery = new GraphQLObjectType({
     }
   }
 }
+```
+
+### Types-Relation
+
+Now, we have 2 objects types: `BookType` and `AuthorType`. We know that every book has an author and every author has written one or more books.So, we can relate these two together. Let's create a way so that GraphQL knows which book belongs to which author.Steps to do that:
+
+- We first go to our `booksData` and add an `authorid` property for each element. This `authorid` should match with the `id` property on `authorsdata`. This sets up a relationship between books and their authors.For ex (shown below): The book called Name of the wind(`authorid: "1"`) is written by Partick Rothfuss(`id: "1"`)
+
+```js
+const booksData = [
+  { name: " Name of the wind", id: "1", genre: "fiction", authorid: "1" },
+  { name: " The Final Empire", id: "2", genre: "fantasy", authorid: "2" },
+  { name: " The Long Earth", id: "3", genre: "sci-fi", authorid: "3" },
+];
+
+const authorsData = [
+  { name: " Patrick Rothfuss", age: 44, id: "1" },
+  { name: " Brandon Sanderson", age: 42, id: "2" },
+  { name: " Terry Patchett", age: 66, id: "3" },
+];
+```
+
+- Now, when a User asks for a book, we want to send the author of that book too. So, we add a property called `author` in the `BookType`. The value of the `author` will be an object with properties like `type` and `resolve(parent, args)` function. Here `parent` represents the book the User has asked for. So, `parent` has access to all the properties of that book which the user has asked for. So, now our `BookType` looks like this:
+
+```js
+// The book type //
+const BookType = new GraphQLObjectType({
+  name: "Book",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    genre: { type: GraphQLString },
+    // Relationship between book type and author type
+    author: {
+      type: AuthorType,
+      // Here resolve func. looks into the author data and looks for the author of the book and returns what we want
+      resolve(parent, args) {
+        //Here the parent parameter has access to that book(and its properties)  which the User has asked for.
+        console.log(parent);
+        return authorsData.find((author) => {
+          console.log(author);
+          return author.authorid === args.id;
+        });
+      },
+    },
+  }),
+});
+```
+
+- Now fire up the server like before and in graphiql, write and press start/play button:
+
+```js
+{
+  book(id: 3) {
+    name
+    genre
+    author {
+      name
+      age
+    }
+  }
+}
+```
+
+- This will be the output you see:
+
+```js
+{
+  "data": {
+    "book": {
+      "name": " The Long Earth",
+      "genre": "sci-fi",
+      "author": {
+        "name": " Patrick Rothfuss",
+        "age": 44
+      }
 ```
