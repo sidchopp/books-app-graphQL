@@ -376,7 +376,7 @@ const BookType = new GraphQLObjectType({
         console.log(parent);
         return authorsData.find((author) => {
           console.log(author);
-          return author.authorid === args.id;
+          return author.id === parent.authorid;
         });
       },
     },
@@ -394,9 +394,12 @@ const BookType = new GraphQLObjectType({
     author {
       name
       age
+      id
     }
   }
 }
+
+
 ```
 
 - This will be the output you see:
@@ -408,7 +411,11 @@ const BookType = new GraphQLObjectType({
       "name": " The Long Earth",
       "genre": "sci-fi",
       "author": {
-        "name": " Patrick Rothfuss",
-        "age": 44
+        "name": " Terry Patchett",
+        "age": 66,
+        "id": "3"
       }
+    }
+  }
+}
 ```

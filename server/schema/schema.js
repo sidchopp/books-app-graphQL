@@ -13,6 +13,9 @@ const booksData = [
   { name: " Name of the wind", id: "1", genre: "fiction", authorid: "1" },
   { name: " The Final Empire", id: "2", genre: "fantasy", authorid: "2" },
   { name: " The Long Earth", id: "3", genre: "sci-fi", authorid: "3" },
+  { name: " The Hero of Ages", id: "4", genre: "fantasy", authorid: "2" },
+  { name: " The Color of Magic", id: "5", genre: "fantasy", authorid: "3" },
+  { name: "The Light Fantastic", id: "6", genre: "fantasy", authorid: "3" },
 ];
 
 const authorsData = [
@@ -37,10 +40,10 @@ const BookType = new GraphQLObjectType({
       resolve(parent, args) {
         //Here the parent parameter has access to that book(and its properties)  which the User has asked for.
         console.log(parent);
-        // return authorsData.find((parent) => parent.authorid === args.id);
+        // return authorsData.find((parent) => parent.id === args.authorid);
         return authorsData.find((author) => {
           console.log(author);
-          return author.authorid === args.id;
+          return author.id === parent.authorid;
         });
       },
     },
