@@ -770,7 +770,8 @@ We get output as:
 
 Let's fireup a MongoDB instance, where we will store our data about books and authors.
 
-- Install dotenv package in server `npm i dotenv`
+- Install mongoose package in server folder so that our app can talk with MongoDB `npm i mongoose`
+- Install dotenv package in server folder `npm i dotenv`
 - Create a file `.env` in the server folder and inside that file store the connection string of the MongoDB instance( for security)
 - Go to `app.js` file and add this code:
 
@@ -790,4 +791,28 @@ Fire up the server and you will see in the console:
 
 ```js
 connected to MongoDB...
+```
+
+- Now, let's put the mongoDB connection logic in a seperate file `connect.js` inside a subfolder `db` inside `server ` folder. In `connect.js` write:
+
+```js
+import mongoose from "mongoose";
+
+const connectDB = (url) => {
+  const connectionDB = mongoose.connection.once("open", () => {
+    console.log("connected to MongoDB...");
+  });
+  return mongoose.connect(url);
+};
+
+export default connectDB;
+```
+
+- In App.js, we first import this `connect.js` and then call the function `connectDB`:
+
+```js
+import connectDB from "./db/connect.js";
+
+//db connection
+connectDB(process.env.MONGO_URL);
 ```

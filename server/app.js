@@ -1,16 +1,14 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import schema from "./schema/schema.js";
-import mongoose from "mongoose";
+import connectDB from "./db/connect.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+
 //db connection
-mongoose.connect(process.env.MONGO_URL);
-mongoose.connection.once("open", () => {
-  console.log("connected to MongoDB...");
-});
+connectDB(process.env.MONGO_URL);
 
 app.use(
   "/graphql",
