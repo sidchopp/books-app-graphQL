@@ -109,6 +109,30 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
+// To modify server-side data
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: {
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt },
+      },
+      resolve(parent, args) {
+        let author = new Author({
+          // This Author on RHS comes from our mongoose models. So, we create a new instance of Author model and put its value in a variable named author
+          name: args.name, //values filled by User
+          age: args.age,
+        });
+        // To save the above data in our DB and to return it to User
+        return author.save();
+      },
+    },
+  },
+});
+
 export default new GraphQLSchema({
   query: RootQuery,
+  mutation: Mutation,
 });

@@ -858,3 +858,73 @@ And now we will import these two inside our `schema.js` file like this:
 import Book from "../models/book.js";
 import Author from "../models/author.js";
 ```
+
+#### Mutations in GraphQL
+
+- To modify server-side data
+- we can mutate and query the new value of a field with one request.
+- While query fields are executed in parallel, mutation fields run in series, one after the other. This means that if we send two mutations in one request, the first is guaranteed to finish before the second begins, ensuring that we don't end up with a race condition with ourselves.
+
+Let's go to `schema.js` file and at the bootom, write:
+
+```js
+// old code....
+
+// To modify server-side data
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: {
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt },
+      },
+      resolve(parent, args) {
+        let author = new Author({
+          // This Author on RHS comes from our mongoose models. So, we create a new instance of Author model and put its value in a variable named author
+          name: args.name,
+          age: args.age,
+        });
+        // To save the above data in our DB and to return it to User
+        return author.save();
+      },
+    },
+  },
+});
+
+export default new GraphQLSchema({
+  query: RootQuery,
+  mutation: Mutation,
+});
+```
+
+- ` author.save();` will save whatever values a User fills from Front End into the correct collection in our MongoDB and `return` key word will return that data to the User. Under the hood, mongoose is doing all this work. Now start server and in graphiql type:
+
+```js
+mutation {
+  addAuthor(name: "Doe John", age: 35) {
+    name
+    age
+  }
+}
+```
+
+The output is:
+
+````js
+{
+  "data": {
+    "addAuthor": {
+      "name": "Doe John",
+      "age": 35
+    }
+  }
+}
+
+In Mongo DB, if we go to our collection we will see an entry/document:
+
+```js
+{"_id":{"$oid":"62c095355aea902d2b24b1e1"},"name":"Doe John","age":{"$numberInt":"35"},"__v":{"$numberInt":"0"}}
+
+````
