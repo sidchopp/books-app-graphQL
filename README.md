@@ -865,7 +865,7 @@ import Author from "../models/author.js";
 - we can mutate and query the new value of a field with one request.
 - While query fields are executed in parallel, mutation fields run in series, one after the other. This means that if we send two mutations in one request, the first is guaranteed to finish before the second begins, ensuring that we don't end up with a race condition with ourselves.
 
-Let's go to `schema.js` file and at the bootom, write:
+Let's go to `schema.js` file and at the bottom and write:
 
 ```js
 // old code....
@@ -912,7 +912,7 @@ mutation {
 
 The output is:
 
-````js
+```js
 {
   "data": {
     "addAuthor": {
@@ -921,10 +921,11 @@ The output is:
     }
   }
 }
+```
 
-In Mongo DB, if we go to our collection we will see an entry/document:
+- In MongoDB Atlas, if we go to our collection we will see an entry/document:
 
 ```js
 {"_id":{"$oid":"62c095355aea902d2b24b1e1"},"name":"Doe John","age":{"$numberInt":"35"},"__v":{"$numberInt":"0"}}
 
-````
+```
