@@ -816,3 +816,45 @@ import connectDB from "./db/connect.js";
 //db connection
 connectDB(process.env.MONGO_URL);
 ```
+
+- Now, let's create `mongoose` model/schema for our MongoDB. Create a new folder `models` and inside it create two files: `author.js` and `book.js`. Inside `book.js` write:
+
+```js
+import mongoose from "mongoose";
+const { Schema } = mongoose;
+
+const bookSchema = new Schema({
+  name: String, // String is shorthand for {type: String}
+  genre: String,
+  authorid: String,
+  // We don't include id property as MongoDB creates it's own _id
+});
+
+const bookModel = mongoose.model("Book", bookSchema); //The first argument is the singular name of the collection your model is for. Mongoose automatically looks for the plural, lowercased version of your model name. Thus, for the example above, the model Book is for the books collection in the database.
+
+export default bookModel;
+```
+
+Inside `author.js` write:
+
+```js
+import mongoose from "mongoose";
+const { Schema } = mongoose;
+
+const authorSchema = new Schema({
+  name: String, // String is shorthand for {type: String}
+  age: Number,
+  // We don't include id property as MongoDB creates it's own _id
+});
+
+const authorModel = mongoose.model("Author", authorSchema);
+
+export default authorModel;
+```
+
+And now we will import these two inside our `schema.js` file like this:
+
+```js
+import Book from "../models/book.js";
+import Author from "../models/author.js";
+```

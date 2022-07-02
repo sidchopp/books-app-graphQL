@@ -1,4 +1,6 @@
 import graphql from "graphql";
+import Book from "../models/book.js";
+import Author from "../models/author.js";
 
 const {
   GraphQLObjectType,
