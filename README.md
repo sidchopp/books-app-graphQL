@@ -929,3 +929,5 @@ The output is:
 {"_id":{"$oid":"62c095355aea902d2b24b1e1"},"name":"Doe John","age":{"$numberInt":"35"},"__v":{"$numberInt":"0"}}
 
 ```
+
+- Now let's delete this document from our MongoDB. And add the three real authors, one by one, from our dummy `authorsData` array in our MongoDB. And delete this dummy data from `schema.js`

@@ -21,12 +21,6 @@ const booksData = [
   { name: "The Light Fantastic", id: "6", genre: "fantasy", authorid: "3" },
 ];
 
-const authorsData = [
-  { name: " Patrick Rothfuss", age: 44, id: "1" },
-  { name: " Brandon Sanderson", age: 42, id: "2" },
-  { name: " Terry Patchett", age: 66, id: "3" },
-];
-
 // Construct a schema, using GraphQL schema language...
 
 // The book type //
