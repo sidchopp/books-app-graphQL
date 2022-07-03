@@ -1,6 +1,6 @@
 # About this project
 
-- A <a href="https://graphql.org/" target="_blank"  >MERN</a> stack app using <a href="https://graphql.org/" target="_blank"  > GraphQL</a>.
+- A <a href="https://www.mongodb.com/mern-stack" target="_blank"  >MERN</a> stack app using <a href="https://graphql.org/" target="_blank"  > GraphQL</a>.
 - It is a learning project on GraphQL, a query language for APIs. I work on this project while following a great tutorial on youtube by the "The Net Ninja" and simultaneously going through the official documentation on <a href="https://graphql.org/" target="_blank"  > GraphQL</a>.
 
 ## Server
