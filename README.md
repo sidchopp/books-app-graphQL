@@ -1172,10 +1172,10 @@ So, now all our resolve functions are updated (with MongoDB)
 const { GraphQLNonNull } = graphql;
 ```
 
-- So, in `Mutation` and write:
+- So, go in `Mutation` and write:
 
 ```js
-// old code which was allowing mutations with missing/null fields:
+//old code which was allowing mutations with missing/null fields:
  type: BookType,
 args: {
         name: { type: GraphQLString },
@@ -1183,7 +1183,7 @@ args: {
         authorid: { type: GraphQLID },
       },
 
-      // new code that replaces the above code is:
+      // will be replaced by this new code below:
 
       type: BookType,
       args: {
@@ -1197,7 +1197,7 @@ args: {
 Similarlry we do this for `addAuthor` as well
 
 ```js
-
+// after modifications to old code
      type: AuthorType,
      args: {
        name: { type: new GraphQLNonNull(GraphQLString) },
@@ -1233,3 +1233,15 @@ We get an error in output:
   ]
 }
 ```
+
+### React Client
+
+- We will make a `React` Client that will talk to our GraphQL Server.
+- For React to talk to GraphQL, we use a GraphQL Client, which is Apollo in our case. Apollo Client is a comprehensive state management library for JavaScript that enables you to manage both local and remote data with GraphQL. Use it to fetch, cache, and modify application data, all while automatically updating your UI.
+- With Apollo, we create a query and then bind a component to that query. So, whenever that component renders in the browser, under the hood Apollo is handling that query(req.) to the server and gets resp. and shows that
+  resp. in that component rendering. Overview: React Component ---query--> Apollo Client <--response-- GraphQL server
+- Go to the root folder of your app. Write:
+
+`npx create-react-app client`
+`cd client`
+`npm start`
