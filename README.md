@@ -994,7 +994,7 @@ And in MongoDB, in the `book` document, there will be a new collection:
 return Author.findById(parent.authorid);
 
 //returning from books collection in MongoDB
-return Book.find((books) => books.authorid === parent.id);
+return Book.find({ authorid: parent.id });
 
 //returning from books collection in MongoDB
 return Book.findById(args.id);

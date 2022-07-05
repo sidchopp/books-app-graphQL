@@ -56,10 +56,7 @@ const AuthorType = new GraphQLObjectType({
         // return booksData.filter((books) => books.authorid === parent.id);
 
         //returning from books collection in MongoDB
-        return Book.find((books) => {
-          console.log(books);
-          return books.authorid === parent.id;
-        });
+        return Book.find({ authorid: parent.id });
       },
     },
   }),
