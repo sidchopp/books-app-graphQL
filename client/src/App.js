@@ -1,5 +1,12 @@
+import BookList from "./components/BookList";
+
 function App() {
-  return <div>Hi, I am a React Client</div>;
+  return (
+    <div id="main">
+      <h1>My Reading List</h1>
+      <BookList />
+    </div>
+  );
 }
 
 export default App;
