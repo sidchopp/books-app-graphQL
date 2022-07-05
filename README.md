@@ -1079,3 +1079,157 @@ You will get an output:
   }
 }
 ```
+
+Or try:
+
+```js
+{
+  book(id: "62c234fd269bc594ee4d943e") {
+    name
+    genre
+    author {
+      name
+      age
+      books {
+        name
+        genre
+      }
+    }
+  }
+}
+```
+
+Output:
+
+```js
+{
+  "data": {
+    "book": {
+      "name": "Name of the wind",
+      "genre": "fiction",
+      "author": {
+        "name": "Patrick Rothfuss",
+        "age": 44,
+        "books": [
+          {
+            "name": "Name of the wind",
+            "genre": "fiction"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+Try this:
+
+```js
+{
+  author(id: "62c099b42b5e368d655ae5b9") {
+    name
+    age
+   books{
+    name
+  }
+  }
+}
+
+```
+
+Output:
+
+```js
+{
+  "data": {
+    "author": {
+      "name": "Terry Patchett",
+      "age": 66,
+      "books": [
+        {
+          "name": "The Long Earth"
+        },
+        {
+          "name": "The Color of Magic"
+        },
+        {
+          "name": "The Light Fantastic"
+        }
+      ]
+    }
+  }
+}
+```
+
+So, now all our resolve functions are updated (with MongoDB)
+
+#### Query/Mutation for Null or Missing Fields
+
+- To ensure that a User fills in all the relavant fields before making a mutation. This way we won't allow a User to make a mutation before filling all the required fields
+- For this we destructure another object from `graphql` called `GraphQLNonNull`.
+
+```js
+const { GraphQLNonNull } = graphql;
+```
+
+- So, in `Mutation` and write:
+
+```js
+// old code which was allowing mutations with missing/null fields:
+ type: BookType,
+args: {
+        name: { type: GraphQLString },
+        genre: { type: GraphQLString },
+        authorid: { type: GraphQLID },
+      },
+
+      // new code that replaces the above code is:
+
+      type: BookType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        genre: { type: new GraphQLNonNull(GraphQLString) },
+        authorid: { type: new GraphQLNonNull(GraphQLID) },
+      },
+
+```
+
+Similarlry we do this for `addAuthor` as well
+
+```js
+
+     type: AuthorType,
+     args: {
+       name: { type: new GraphQLNonNull(GraphQLString) },
+       age: { type: new GraphQLNonNull(GraphQLInt) },
+     },
+```
+
+So, now if we try to add an Author without his/her age in graphiql:
+
+```js
+mutation{
+  addAuthor(name: "sid") {
+    id
+  }
+}
+
+```
+
+We get an error in output:
+
+```js
+{
+  "errors": [
+    {
+      "message": "Field \"addAuthor\" argument \"age\" of type \"Int!\" is required, but it was not provided.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ]
+    }
+  ]
+}
+```
