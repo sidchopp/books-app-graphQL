@@ -27,11 +27,14 @@ const BookType = new GraphQLObjectType({
       resolve(parent, args) {
         //Here the parent parameter has access to that book(and its properties)  which the User has asked for.
         // console.log(parent);
-        // return authorsData.find((parent) => parent.id === args.authorid);
-        return authorsData.find((author) => {
-          // console.log(author);
-          return author.id === parent.authorid;
-        });
+
+        // return authorsData.find((author) => {
+        //   // console.log(author);
+        //   return author.id === parent.authorid;
+        // });
+
+        //returning from authors collection in MongoDB
+        return Author.findById(parent.authorid);
       },
     },
   }),
@@ -50,7 +53,13 @@ const AuthorType = new GraphQLObjectType({
       resolve(parent, args) {
         console.log(parent);
         // Now resovle fn will filter the books that belong to a particular author
-        return booksData.filter((books) => books.authorid === parent.id);
+        // return booksData.filter((books) => books.authorid === parent.id);
+
+        //returning from books collection in MongoDB
+        return Book.find((books) => {
+          console.log(books);
+          return books.authorid === parent.id;
+        });
       },
     },
   }),
@@ -66,7 +75,10 @@ const RootQuery = new GraphQLObjectType({
       // Here resolve func. looks into the book data and returns what we want
       resolve(parent, args) {
         // code to get data from DB or any other source
-        return booksData.find((book) => book.id === args.id);
+        // return booksData.find((book) => book.id === args.id);
+
+        //returning from books collection in MongoDB
+        return Book.findById(args.id);
       },
     },
     author: {
@@ -75,19 +87,28 @@ const RootQuery = new GraphQLObjectType({
       // Here resolve func. looks into the author data and returns what we want
       resolve(parent, args) {
         // code to get data from DB or any other source
-        return authorsData.find((author) => author.id === args.id);
+        // return authorsData.find((author) => author.id === args.id);
+
+        //returning from authors collection in MongoDB
+        return Author.findById(args.id);
       },
     },
     books: {
       type: new GraphQLList(BookType),
       resolve(parent, args) {
-        return booksData;
+        // return booksData;
+
+        //returning all books from books collection in MongoDB
+        return Book.find({});
       },
     },
     authors: {
       type: new GraphQLList(AuthorType),
       resolve(parent, args) {
-        return authorsData;
+        // return authorsData;
+
+        //returning all authors from authors collection in MongoDB
+        return Author.find({});
       },
     },
   },

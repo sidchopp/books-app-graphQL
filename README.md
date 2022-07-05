@@ -985,3 +985,97 @@ And in MongoDB, in the `book` document, there will be a new collection:
 ```
 
 - Now we will add the remaining books, like we did in the previous step, to our MongoDB and remove the `booksData` array ( which was basically a dummy data) from `schema.js`.
+
+- Now, let's update all the resolve functions for our queries in `schema.js`, so that we can query data from MongoDB, so we modify like this:
+
+```js
+//old code
+//returning from authors collection in MongoDB
+return Author.findById(parent.authorid);
+
+//returning from books collection in MongoDB
+return Book.find((books) => books.authorid === parent.id);
+
+//returning from books collection in MongoDB
+return Book.findById(args.id);
+
+//returning all books from books collection in MongoDB
+return Book.find({});
+
+//returning all authors from authors collection in MongoDB
+return Author.find({});
+```
+
+Test in graphiql by writing:
+
+```js
+{
+  books {
+    name
+    genre
+    author {
+      name
+      age
+    }
+  }
+}
+```
+
+You will get an output:
+
+```js
+{
+  "data": {
+    "books": [
+      {
+        "name": "Name of the wind",
+        "genre": "fiction",
+        "author": {
+          "name": "Patrick Rothfuss",
+          "age": 44
+        }
+      },
+      {
+        "name": "The Final Empire",
+        "genre": "fantasy",
+        "author": {
+          "name": "Brandon Sanderson",
+          "age": 42
+        }
+      },
+      {
+        "name": "The Long Earth",
+        "genre": "sci-fi",
+        "author": {
+          "name": "Terry Patchett",
+          "age": 66
+        }
+      },
+      {
+        "name": "The Hero of Ages",
+        "genre": "fantasy",
+        "author": {
+          "name": "Brandon Sanderson",
+          "age": 42
+        }
+      },
+      {
+        "name": "The Color of Magic",
+        "genre": "fantasy",
+        "author": {
+          "name": "Terry Patchett",
+          "age": 66
+        }
+      },
+      {
+        "name": "The Light Fantastic",
+        "genre": "fantasy",
+        "author": {
+          "name": "Terry Patchett",
+          "age": 66
+        }
+      }
+    ]
+  }
+}
+```
