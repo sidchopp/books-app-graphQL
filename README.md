@@ -1236,12 +1236,62 @@ We get an error in output:
 
 ### React Client
 
-- We will make a `React` Client that will talk to our GraphQL Server.
+- We will make a <a href="https://reactjs.org/" target="_blank"  >React</a> Client that will talk to our GraphQL Server.
 - For React to talk to GraphQL, we use a GraphQL Client, which is Apollo in our case. Apollo Client is a comprehensive state management library for JavaScript that enables you to manage both local and remote data with GraphQL. Use it to fetch, cache, and modify application data, all while automatically updating your UI.
+- Just like with RESTful APIs, we use something like `axios` to make queries from client to the server, in `GraphQL`, we make queries to server using Apollo. We can use Apollo with Vue, Angular, etc. To get details about how to use Apollo with React look into <a href="https://www.apollographql.com/docs/react/" target="_blank"  >Apollo Client</a>
 - With Apollo, we create a query and then bind a component to that query. So, whenever that component renders in the browser, under the hood Apollo is handling that query(req.) to the server and gets resp. and shows that
-  resp. in that component rendering. Overview: React Component ---query--> Apollo Client <--response-- GraphQL server
+  resp. in that component rendering. Overview: React Component ---query--> Apollo Client <--response-- GraphQL server.
 - Go to the root folder of your app. Write:
 
 `npx create-react-app client`
 `cd client`
 `npm start`
+
+- Remove the extra files from `src` folder in `client` and create a new folder called `components` and inside it create a new component `BookList`
+
+```js
+import React from "react";
+
+const BookList = () => {
+  return (
+    <div>
+      <ul id="book-list">
+        <li>Book Name</li>
+      </ul>
+    </div>
+  );
+};
+
+export default BookList;
+```
+
+- Now, import this component in `App.js`
+- Then, install Apollo Client. From `client` folder run:
+  `npm install @apollo/client graphql`
+- Go it `App.js` in client folder and add these codes:
+
+```js
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+} from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "http://localhost:4000/graphql",
+  cache: new InMemoryCache(),
+});
+```
+
+`uri` specifies the URL of our GraphQL server.
+`cache` is an instance of InMemoryCache, which Apollo Client uses to cache query results after fetching them.
+That's it! Our client is ready to start fetching data.
+
+- You connect Apollo Client to React with the `ApolloProvider` component. Similar to React's `Context.Provider`, ApolloProvider wraps your React app and places Apollo Client on the context, enabling you to access it from anywhere in your component tree. ANd then we arap ore React App with `ApolloProvider`, like this:
+
+```js
+<ApolloProvider client={client}>
+  <App />
+</ApolloProvider>
+```
