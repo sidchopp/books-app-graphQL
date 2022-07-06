@@ -1,9 +1,34 @@
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_AUTHORS } from "../queries/queries";
 
 const AddBook = () => {
+  //States
+
+  const [bookInfo, setBookInfo] = useState({
+    bookName: "",
+    genre: "",
+    authorid: "",
+  });
+
+  //Event Handlers
+
+  const handleChange = (e) => {
+    const name = e.target.name; //name corresponds to the name attribute in each input field
+    const value = e.target.value; //value is what a User writes in each input fields
+    setBookInfo({ ...bookInfo, [name]: value }); // ...Spread operator to get all the previous values of bookInfo states and the [] notation then dynamically adds to the state whatever a User fills
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // To make sure User fills all input fields
+    if (bookInfo.bookName && bookInfo.genre && bookInfo.authorid) {
+      console.log(bookInfo);
+    }
+  };
+
+  // Destructuring the output of query
   const { loading, error, data } = useQuery(GET_AUTHORS);
-  //   console.log(data);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
@@ -18,23 +43,39 @@ const AddBook = () => {
   });
 
   return (
-    <form id="add-book">
+    <form id="add-book" onSubmit={handleSubmit}>
       <div className="field">
-        <label htmlFor="">Book Name:</label>
-        <input type="text" />
+        <label htmlFor="bookName">Book Name:</label>
+        <input
+          id="bookName" // corresponds to htmlFor attribute of label
+          type="text"
+          name="bookName"
+          value={bookInfo.bookName} // state value
+          onChange={handleChange}
+        />
       </div>
 
       <div className="field">
-        <label htmlFor="">Genre:</label>
-        <input type="text" />
+        <label htmlFor="genre">Genre:</label>
+        <input
+          id="genre" // corresponds to htmlFor attribute of label
+          type="text"
+          name="genre"
+          value={bookInfo.genre} // state value
+          onChange={handleChange}
+        />
       </div>
 
       <div className="field">
-        <label>Author:</label>
-        <select>
+        <label htmlFor="authorID">Author:</label>
+        <select
+          id="authorID" // corresponds to htmlFor attribute of label
+          name="authorid"
+          value={bookInfo.authorid} // state value
+          onChange={handleChange}
+        >
           <option>Select Author </option>
-          {/* To show the list of Authors in the dropdown */}
-          {showAuthors}
+          {showAuthors} {/* To show the list of Authors in the dropdown */}
         </select>
       </div>
       <button>+</button>
