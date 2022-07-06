@@ -1,11 +1,13 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
+import cors from "cors";
 import schema from "./schema/schema.js";
 import connectDB from "./db/connect.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+app.use(cors());
 
 //db connection
 connectDB(process.env.MONGO_URL);

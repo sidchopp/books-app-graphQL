@@ -1295,3 +1295,42 @@ That's it! Our client is ready to start fetching data.
   <App />
 </ApolloProvider>
 ```
+
+- Now let's Fetch data from GraphQL server with useQuery
+- After your ApolloProvider is hooked up, you can start requesting data with useQuery. The useQuery hook is a React hook that shares GraphQL data with your UI.
+- NOTE: To connect your React Client with GraphQL server we need to install a package called `cors`( Cross-Origin Resource Sharing) in server folder. Then go to `app.js` of server and write this code and restart the server:
+
+```js
+import cors from "cors";
+app.use(cors());
+```
+
+- Now, come back to client folder. Write this code in `BookList` component to fetch data:
+
+```js
+import { gql, useQuery } from "@apollo/client";
+
+const GET_BOOKS = gql`
+  query GetBooks {
+    books {
+      name
+      id
+    }
+  }
+`;
+
+const BookList = () => {
+  const { loading, error, data } = useQuery(GET_BOOKS);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  return data.books.map(({ id, name }) => (
+    <div key={id}>
+      <h3>{name}</h3>
+      <br />
+    </div>
+  ));
+};
+
+export default BookList;
+```
