@@ -11,7 +11,8 @@ const AddBook = () => {
   const showAuthors = data.authors.map(({ name, id }) => {
     return (
       <option key={id} value={id}>
-        <li>{name}</li>
+        {/* <li>{name}</li> */}
+        {name}
       </option>
     );
   });
