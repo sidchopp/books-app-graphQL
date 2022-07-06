@@ -1288,7 +1288,7 @@ const client = new ApolloClient({
 `cache` is an instance of InMemoryCache, which Apollo Client uses to cache query results after fetching them.
 That's it! Our client is ready to start fetching data.
 
-- You connect Apollo Client to React with the `ApolloProvider` component. Similar to React's `Context.Provider`, ApolloProvider wraps your React app and places Apollo Client on the context, enabling you to access it from anywhere in your component tree. ANd then we arap ore React App with `ApolloProvider`, like this:
+- You connect Apollo Client to React with the `ApolloProvider` component. Similar to React's `Context.Provider`, ApolloProvider wraps your React app and places Apollo Client on the context, enabling you to access it from anywhere in your component tree. And then we wrap our React App with `ApolloProvider`, like this:
 
 ```js
 <ApolloProvider client={client}>
@@ -1298,18 +1298,19 @@ That's it! Our client is ready to start fetching data.
 
 - Now let's Fetch data from GraphQL server with useQuery
 - After your ApolloProvider is hooked up, you can start requesting data with useQuery. The useQuery hook is a React hook that shares GraphQL data with your UI.
-- NOTE: To connect your React Client with GraphQL server we need to install a package called `cors`( Cross-Origin Resource Sharing) in server folder. Then go to `app.js` of server and write this code and restart the server:
+- NOTE: To make sure that React Client can fetch data from GraphQL server, we need to install a package called `cors`( Cross-Origin Resource Sharing) in `server` folder. Then go to `app.js` of `server` and write this code and restart the server:
 
 ```js
 import cors from "cors";
 app.use(cors());
 ```
 
-- Now, come back to client folder. Write this code in `BookList` component to fetch data:
+- Now, come back to `client` folder. Write this code in `BookList` component to fetch data:
 
 ```js
 import { gql, useQuery } from "@apollo/client";
 
+//To define the query we want to execute, we wrap it in the gql template literal:
 const GET_BOOKS = gql`
   query GetBooks {
     books {
@@ -1319,6 +1320,7 @@ const GET_BOOKS = gql`
   }
 `;
 
+// This BookList component will execute our GET_BOOKS query with useQuery hook
 const BookList = () => {
   const { loading, error, data } = useQuery(GET_BOOKS);
   if (loading) return <p>Loading...</p>;
@@ -1333,4 +1335,66 @@ const BookList = () => {
 };
 
 export default BookList;
+```
+
+- Whenever this component renders, the useQuery hook automatically executes our query and returns a result object containing `loading`, `error`, and `data` properties.
+- Apollo Client automatically tracks a query's loading and error states, which are reflected in the `loading` and `error` properties.
+- When the result of your query comes back, it's attached to the `data` property.
+- Now run the client to see the lis tof books.
+- Let's create another component `AddBook` to add a book based on a list of Authors. Here we also want to have an option to select the name of an Author while adding his/her book.
+
+```js
+import { gql, useQuery } from "@apollo/client";
+
+//To define the query we want to execute, we wrap it in the gql template literal:
+const GET_AUTHORS = gql`
+  query GetAuthors {
+    authors {
+      name
+      id
+    }
+  }
+`;
+
+const AddBook = () => {
+  const { loading, error, data } = useQuery(GET_AUTHORS);
+  console.log(data);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  //To show all the Authors
+  const showAuthors = data.authors.map(({ name, id }) => {
+    return (
+      <option key={id} value={id}>
+        <li>{name}</li>
+      </option>
+    );
+  });
+
+  return (
+    <form id="add-book">
+      <div className="field">
+        <label htmlFor="">Book Name:</label>
+        <input type="text" />
+      </div>
+
+      <div className="field">
+        <label htmlFor="">Genre:</label>
+        <input type="text" />
+      </div>
+
+      <div className="field">
+        <label>Author:</label>
+        <select>
+          <option>Select Author </option>
+          {/* To show the list of Authors in the dropdown */}
+          {showAuthors}
+        </select>
+      </div>
+      <button>+</button>
+    </form>
+  );
+};
+
+export default AddBook;
 ```
