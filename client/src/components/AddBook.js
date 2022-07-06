@@ -1,18 +1,9 @@
-import { gql, useQuery } from "@apollo/client";
-
-//To define the query we want to execute, we wrap it in the gql template literal:
-const GET_AUTHORS = gql`
-  query GetAuthors {
-    authors {
-      name
-      id
-    }
-  }
-`;
+import { useQuery } from "@apollo/client";
+import { GET_AUTHORS } from "../queries/queries";
 
 const AddBook = () => {
   const { loading, error, data } = useQuery(GET_AUTHORS);
-  console.log(data);
+  //   console.log(data);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 

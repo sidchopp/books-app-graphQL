@@ -1,14 +1,5 @@
-import { gql, useQuery } from "@apollo/client";
-
-//To define the query we want to execute, we wrap it in the gql template literal:
-const GET_BOOKS = gql`
-  query GetBooks {
-    books {
-      name
-      id
-    }
-  }
-`;
+import { useQuery } from "@apollo/client";
+import { GET_BOOKS } from "../queries/queries";
 
 // This BookList component will execute our GET_BOOKS query with useQuery hook
 const BookList = () => {

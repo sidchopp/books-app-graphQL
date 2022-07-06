@@ -1398,3 +1398,35 @@ const AddBook = () => {
 
 export default AddBook;
 ```
+
+- Now, let's create a seperate folder `queries` inside `src` folder of client and inside it create a file `queries.js` and put all our `gql` queries in this file and then import the queries in the respective files. This will make our code structure clean. So, in `queries.js`, write:
+
+```js
+import { gql } from "@apollo/client";
+
+//To define the query we want to execute, we wrap it in the gql template literal:
+
+//To get all Books
+const GET_BOOKS = gql`
+  query GetBooks {
+    books {
+      name
+      id
+    }
+  }
+`;
+
+//To get all Authors
+const GET_AUTHORS = gql`
+  query GetAuthors {
+    authors {
+      name
+      id
+    }
+  }
+`;
+
+export { GET_BOOKS, GET_AUTHORS };
+```
+
+Inside `AddBook` and `BookList` components, import ` GET_AUTHORS` and `GET_BOOKS` respectively and remove import `gql` as now we have already imported `gql` in `queries.js` file.
