@@ -1431,7 +1431,7 @@ export { GET_BOOKS, GET_AUTHORS };
 
 Inside `AddBook` and `BookList` components, import ` GET_AUTHORS` and `GET_BOOKS` respectively and remove import `gql` as now we have already imported `gql` in `queries.js` file.
 
-- Now, let's include states, bu using `useState` hook in our React App, so that a User can add a new book. AT the moment, we want to get access to whatever input a User fills in and then in next step we will add that input to our list of Books/MongoDB. In `AddBook` component, write the following code:
+- Now, let's include states, by using `useState` hook in our React App, so that a User can add a new book. At the moment, we want to get access to whatever input a User fills in and then in next step we will add that input to our list of Books/MongoDB. In `AddBook` component, write the following code:
 
 ```js
 import { useState } from "react";
@@ -1521,3 +1521,36 @@ const AddBook = () => {
 
 export default AddBook;
 ```
+
+- Now, to update the list of books in our MongoDB we will use `mutations` in client, so that whatever input a User fills in the previous step we can save that into our list of books. So, in `queries.js`, we will make a mutation to add a new book. Remember at the moment, we are keeping the values of `name`,`genre`,`authorid` in `addBook`(below) as vacant but soon we try to fill them with user inputs. In ``queries.js`, add this code and export it:
+
+```js
+//To add a new book, we use mutation
+const ADD_BOOK = gql`
+  mutation AddBook {
+    addBook(name: "", genre: "", authorid: "") {
+      name
+      id
+    }
+  }
+`;
+```
+
+Now, import `ADD_BOOK` muation into `AddBook` component and then import `useMutation ` from `@apollo/client`. Inside `AddBook` component add this code:
+
+```js
+const [
+  mutateFunction,
+  { data: addBookData, loading: addBookLoading, error: addBookError },
+] = useMutation(ADD_BOOK);
+
+const handleSubmit = (e) => {
+ //old code above
+
+ // calling the mutate fn
+    mutateFunction();
+  }
+};
+```
+
+NOTE: Unlike `useQuery`, `useMutation` doesn't execute its operation automatically on render. Instead, you call this mutate function, like we did in last step.

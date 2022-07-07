@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_AUTHORS } from "../queries/queries";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_AUTHORS, ADD_BOOK } from "../queries/queries";
 
 const AddBook = () => {
   //States
@@ -24,11 +24,19 @@ const AddBook = () => {
     // To make sure User fills all input fields
     if (bookInfo.bookName && bookInfo.genre && bookInfo.authorid) {
       console.log(bookInfo);
+      // Calling Mutate function
+      mutateFunction();
     }
   };
 
-  // Destructuring the output of query
+  // Destructuring the output of query/mutation
   const { loading, error, data } = useQuery(GET_AUTHORS);
+  const [
+    mutateFunction,
+    { data: addBookData, loading: addBookLoading, error: addBookError },
+  ] = useMutation(ADD_BOOK);
+  console.log(addBookData);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
