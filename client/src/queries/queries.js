@@ -33,4 +33,28 @@ const ADD_BOOK = gql`
   }
 `;
 
-export { GET_BOOKS, GET_AUTHORS, ADD_BOOK };
+//To get details of a Book
+const GET_BOOK = gql`
+  # Comment: Using variables to know which book a User selects !
+  query GetBook($id: ID) {
+    book(id: $id) {
+      id
+      name
+      genre
+      # Comment:  Info about Author of this Book !
+      author {
+        id
+        name
+        age
+        # Comment: Info about other books of this Author !
+        books {
+          name
+          id
+          genre
+        }
+      }
+    }
+  }
+`;
+
+export { GET_BOOKS, GET_AUTHORS, ADD_BOOK, GET_BOOK };

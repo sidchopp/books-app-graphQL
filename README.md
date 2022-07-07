@@ -1600,3 +1600,92 @@ const handleSubmit = (e) => {
     }
   };
 ```
+
+- Now, we add a new feature- When a User clicks on a book, the details of that book will be displayed.
+
+- Create a new component `BookDetails.js`
+- In `queries.js`, we create a query to get all the details associated with a Book:
+
+```js
+//To get details of a Book
+const GET_BOOK = gql`
+  # Comment: Using variables to know which book a User selects !
+  query GetBook($id: ID) {
+    book(id: $id) {
+      id
+      name
+      genre
+      # Comment:  Info about Author of this Book !
+      author {
+        id
+        name
+        age
+        # Comment: Info about other books of this Author !
+        books {
+          name
+          id
+          genre
+        }
+      }
+    }
+  }
+`;
+```
+
+- Then first export and then import `GET_BOOK ` into `BookDetails`:
+
+```js
+import { useQuery } from "@apollo/client";
+import { GET_BOOK } from "../queries/queries";
+
+const BookDetails = () => {
+  const { loading, error, data } = useQuery(GET_BOOK);
+
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+  return (
+    <div id="book-details">
+      <p>Output Book details here..</p>
+    </div>
+  );
+};
+
+export default BookDetails;
+```
+
+- Now, let's nest this `BookDetails` component into `BookList` component. Modify `BookList`:
+
+```js
+import { useQuery } from "@apollo/client";
+import { GET_BOOKS } from "../queries/queries";
+
+//Components
+import BookDetails from "./BookDetails";
+
+// This BookList component will execute our GET_BOOKS query with useQuery hook
+const BookList = () => {
+  const { loading, error, data } = useQuery(GET_BOOKS);
+  // console.log(data);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  // To SHow all Books
+  const showBooks = data.books.map(({ id, name }) => {
+    return (
+      <div key={id}>
+        <ul id="book-list">{name}</ul>
+      </div>
+    );
+  });
+
+  return (
+    <div>
+      {showBooks}
+      <BookDetails />
+    </div>
+  );
+};
+
+export default BookList;
+<BookDetails />;
+```
