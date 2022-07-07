@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_AUTHORS, ADD_BOOK } from "../queries/queries";
+import { GET_AUTHORS, ADD_BOOK, GET_BOOKS } from "../queries/queries";
 
 const AddBook = () => {
   //States
@@ -25,7 +25,15 @@ const AddBook = () => {
     if (bookInfo.bookName && bookInfo.genre && bookInfo.authorid) {
       console.log(bookInfo);
       // Calling Mutate function
-      mutateFunction();
+      mutateFunction({
+        variables: {
+          name: bookInfo.bookName,
+          genre: bookInfo.genre,
+          authorid: bookInfo.authorid,
+        },
+        // for refetching query
+        refetchQueries: [{ query: GET_BOOKS }],
+      });
     }
   };
 
@@ -35,7 +43,6 @@ const AddBook = () => {
     mutateFunction,
     { data: addBookData, loading: addBookLoading, error: addBookError },
   ] = useMutation(ADD_BOOK);
-  console.log(addBookData);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;

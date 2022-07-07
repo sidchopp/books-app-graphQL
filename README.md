@@ -1522,7 +1522,7 @@ const AddBook = () => {
 export default AddBook;
 ```
 
-- Now, to update the list of books in our MongoDB we will use `mutations` in client, so that whatever input a User fills in the previous step we can save that into our list of books. So, in `queries.js`, we will make a mutation to add a new book. Remember at the moment, we are keeping the values of `name`,`genre`,`authorid` in `addBook`(below) as vacant but soon we try to fill them with user inputs. In ``queries.js`, add this code and export it:
+- Now, to update the list of books in our MongoDB we will use `mutations` in client, so that whatever input a User fills in the previous step we can save that into our list of books. So, in `queries.js`, we will make a mutation to add a new book. Remember at the moment, we are keeping the values of `name`,`genre`,`authorid` properties in `addBook`(below) as vacant but soon we try to fill them with user inputs. In ``queries.js`, add this code and export it:
 
 ```js
 //To add a new book, we use mutation
@@ -1554,3 +1554,49 @@ const handleSubmit = (e) => {
 ```
 
 NOTE: Unlike `useQuery`, `useMutation` doesn't execute its operation automatically on render. Instead, you call this mutate function, like we did in last step.
+
+- Now, we use `variables` in `mutation` so that whatever a User fills in while adding a book will be stored in the MongoDB and also shown on our React App. GraphQL has a first-class way to factor dynamic values out of the query, and pass them as a separate dictionary. These values are called `variables`. We use `$` before variables and id something is imp we put a `!` after it. So in `queries.js`, modify the mutation code as:
+
+```js
+const ADD_BOOK = gql`
+  # mutation is taking three variables !
+  mutation AddBook($name: String!, $genre: String!, $authorid: ID!) {
+    addBook(name: $name, genre: $genre, authorid: $authorid) {
+      name
+      id
+    }
+  }
+`;
+```
+
+And then go in `AddBook` component and modify the mutate function by passing an object called `variables`
+
+```js
+mutateFunction({
+  variables: {
+    name: bookInfo.bookName,
+    genre: bookInfo.genre,
+    authorid: bookInfo.authorid,
+  },
+});
+```
+
+So, now if we add a new book( name, genre, author), we can see it in our MongoDB and when we refresh the React App,this new book will be shown in the UI too.
+
+- Now, let's try and sync our App, so that as soon as a new book is added to the MongoDB, it will be shown authomatically in UI.So, we need to refetch the data as soon as an update is made. So, for that after the `mutation` is fired in `AddBook` component, we use `refetchQueries` after `variables`, so that after each update/mutation, a query is refetched- which in our case is `GET_BOOKS`. `refetchQueries` will be an array of different queries that we want to refetch. So, each item in this array will be an object with `query` property. The value of this property is the query we want to refetch after the `mutation` is fired.
+  Note we have to import `GET_BOOKS` in `AddBook` component too. So, we update `AddBook` by:
+
+```js
+import { ....,  GET_BOOKS } from "../queries/queries";
+
+// old code
+
+const handleSubmit = (e) => {
+   // old code....
+
+        // for refetching query
+        refetchQueries: [{query: GET_BOOKS}]
+      });
+    }
+  };
+```

@@ -24,8 +24,9 @@ const GET_AUTHORS = gql`
 
 //To add a new book, we use mutation
 const ADD_BOOK = gql`
-  mutation AddBook {
-    addBook(name: "", genre: "", authorid: "") {
+  # comment: mutation is taking three variables !
+  mutation AddBook($name: String!, $genre: String!, $authorid: ID!) {
+    addBook(name: $name, genre: $genre, authorid: $authorid) {
       name
       id
     }
