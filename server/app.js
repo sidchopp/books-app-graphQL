@@ -20,7 +20,7 @@ app.use(
     graphiql: true,
   })
 );
-const port = 4000;
+const port = process.env.port;
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
