@@ -20,12 +20,12 @@ app.use(
     graphiql: true,
   })
 );
-const port = process.env.port;
+const PORT = process.env.PORT || 4000;
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
 });
 
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}..`);
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}..`);
 });
