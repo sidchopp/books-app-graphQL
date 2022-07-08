@@ -22,6 +22,11 @@ app.use(
 );
 const PORT = process.env.PORT || 4000;
 
+// To test server deployment
+app.get("/", (req, res) => {
+  res.json("Server deployed sucessfully");
+});
+
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
 });
