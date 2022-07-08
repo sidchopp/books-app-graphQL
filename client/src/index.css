@@ -1,10 +1,10 @@
 body {
-  background: #f1ebea;
+  background: #d0e1f9;
   font-family: "Edu QLD Beginner", cursive;
 }
 
 #main h1 {
-  color: #444;
+  color: #283655;
   text-align: center;
 }
 #main {
@@ -21,8 +21,62 @@ body {
   margin: 12px;
   padding: 10px;
   border-radius: 4px;
-  border: 1px solid #880ef4;
+  border: 1px solid #283655;
   box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  color: #880ef4;
+  color: #283655;
+}
+form {
+  background: #fff;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  /* Same width as the main */
+  width: 60%;
+  /* To make sure the form will not overlap the right part */
+  box-sizing: border-box;
+}
+form .field {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+form label {
+  text-align: right;
+  padding: 6px;
+}
+form select,
+input {
+  margin: 4px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+form button {
+  color: #fff;
+  font-size: 2rem;
+  background: #283655;
+  border: 0;
+  padding: 0 10px;
+  /* To turn borger into a circle we use a value of 50% or more */
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
+#book-details {
+  position: fixed;
+  top: 0;
+  right: 0;
+  /* The main, which is id for book list, has a width of 60%, so we keep the book details 40%  */
+  width: 40%;
+  height: 100%;
+  background: #4d648d;
+  padding: 30px;
+  overflow: auto;
+  box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.3);
+  /* border-box will mot let this overlap left main section */
+  box-sizing: border-box;
+  color: #d0e1f9;
 }
