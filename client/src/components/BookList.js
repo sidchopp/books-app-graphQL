@@ -12,26 +12,30 @@ const BookList = () => {
 
   const { loading, error, data } = useQuery(GET_BOOKS);
   // console.log(data);
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   // To Show all Books
-  const showBooks = data.books.map(({ id, name }) => {
-    // Event Handlers
-    const handleClick = (e) => {
-      setSelected({ id });
-    };
-
-    return (
-      <div key={id}>
-        <li onClick={handleClick}>{name}</li>
-      </div>
-    );
-  });
+  const showBooks = () => {
+    if (loading) {
+      return <div>Loading books..</div>;
+    } else {
+      return data.books.map(({ id, name }) => {
+        // Event Handlers
+        const handleClick = (e) => {
+          setSelected({ id });
+        };
+        return (
+          <li key={id} onClick={handleClick}>
+            {name}
+          </li>
+        );
+      });
+    }
+  };
 
   return (
     <div>
-      <ul id="book-list">{showBooks}</ul>
+      <ul id="book-list">{showBooks()}</ul>
       <BookDetails bookid={selected} />
     </div>
   );
