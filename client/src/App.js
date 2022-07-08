@@ -11,7 +11,7 @@ import AddBook from "./components/AddBook";
 
 //Apolo Client set up
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  uri: "https://books-merng-server.herokuapp.com/graphql",
   cache: new InMemoryCache(),
 });
 
