@@ -1759,3 +1759,5 @@ const BookDetails = ({ bookid }) => {
 
 export default BookDetails;
 ```
+
+Now when we click a book, its id is shown on UI. This is just for testing.

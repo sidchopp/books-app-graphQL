@@ -41,16 +41,13 @@ const GET_BOOK = gql`
       id
       name
       genre
-      # Comment:  Info about Author of this Book !
       author {
         id
         name
         age
-        # Comment: Info about other books of this Author !
         books {
           name
           id
-          genre
         }
       }
     }
