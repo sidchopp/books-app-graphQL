@@ -1769,3 +1769,35 @@ const { loading, error, data } = useQuery(GET_BOOK, {
   variables: bookid,
 });
 ```
+
+- Now, we want to display the book details, when a User clicks a book. In `BookDetails`, add this code:
+
+```js
+// old code...
+
+//To display book contents
+const { book } = data;
+const displayBookDetails = () => {
+  if (book) {
+    return (
+      <div>
+        <h2>{book.name}</h2>
+        <p>{book.genre}</p>
+        <p>{book.author.name}</p>
+        <p>Other book by this Author</p>
+        <ul className="other-books">
+          {book.author.books.map((item) => {
+            return <li key={item.id}>{item.name}</li>;
+          })}
+        </ul>
+      </div>
+    );
+  } else {
+    return <div>No Book Selected!</div>;
+  }
+};
+
+return <div id="book-details">{displayBookDetails()}</div>;
+```
+
+So, now when a Use clicks a book, the details of that book will be displayed on UI.
