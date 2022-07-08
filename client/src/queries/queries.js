@@ -48,6 +48,7 @@ const GET_BOOK = gql`
         books {
           name
           id
+          genre
         }
       }
     }

@@ -2,8 +2,11 @@ import { useQuery } from "@apollo/client";
 import { GET_BOOK } from "../queries/queries";
 
 const BookDetails = ({ bookid }) => {
+  // console.log(bookid);
+  const { loading, error, data } = useQuery(GET_BOOK, {
+    variables: bookid,
+  });
   console.log(bookid);
-  const { loading, error, data } = useQuery(GET_BOOK);
   console.log(data);
 
   if (loading) return <p>Loading ...</p>;

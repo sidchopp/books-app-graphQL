@@ -1761,3 +1761,11 @@ export default BookDetails;
 ```
 
 Now when we click a book, its id is shown on UI. This is just for testing.
+
+- To show book details when a User clicks a book, we need to add `variables` in the `GET_BOOK` query like this:
+
+```js
+const { loading, error, data } = useQuery(GET_BOOK, {
+  variables: bookid,
+});
+```

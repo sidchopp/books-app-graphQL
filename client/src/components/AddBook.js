@@ -39,6 +39,7 @@ const AddBook = () => {
 
   // Destructuring the output of query/mutation
   const { loading, error, data } = useQuery(GET_AUTHORS);
+  // console.log(data);
   const [
     mutateFunction,
     { data: addBookData, loading: addBookLoading, error: addBookError },
