@@ -1,15 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body {
   background: #d0e1f9;
   font-family: "Edu QLD Beginner", cursive;
 }
-
+.header {
+  padding: 20px;
+}
 #main h1 {
   color: #283655;
   text-align: center;
 }
 #main {
   padding: 0px;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   width: 60%;
   height: 100%;
 }
@@ -26,16 +33,31 @@ body {
   cursor: pointer;
   color: #283655;
 }
+#book-details {
+  position: fixed;
+  top: 0;
+  right: 0;
+  /* The main, which is id for book list, has a width of 60%, so we keep the book details 40%  */
+  width: 40%;
+  height: 100%;
+  background: #4d648d;
+  padding: 30px;
+  overflow: auto;
+  box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.3);
+  /* border-box will not let this overlap left main section */
+  /* box-sizing: border-box; */
+  color: #d0e1f9;
+}
 form {
   background: #fff;
-  padding: 20px;
+  padding: 30px;
   position: fixed;
-  left: 0;
+  right: 0;
   bottom: 0;
   /* Same width as the main */
-  width: 60%;
+  width: 40%;
   /* To make sure the form will not overlap the right part */
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
 }
 form .field {
   display: grid;
@@ -66,18 +88,13 @@ form button {
   left: 10px;
   bottom: 10px;
 }
-#book-details {
-  position: fixed;
-  top: 0;
-  right: 0;
-  /* The main, which is id for book list, has a width of 60%, so we keep the book details 40%  */
-  width: 40%;
-  height: 100%;
-  background: #4d648d;
-  padding: 30px;
-  overflow: auto;
-  box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.3);
-  /* border-box will mot let this overlap left main section */
-  box-sizing: border-box;
-  color: #d0e1f9;
+/* Use a media query to add a break point at 800px: */
+@media screen and (max-width: 800px) {
+  #book-list,
+  #book-details,
+  #add-book,
+  #main {
+    width: 100%;
+    position: relative;
+  }
 }
